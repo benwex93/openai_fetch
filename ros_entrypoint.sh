@@ -2,23 +2,15 @@
 set -e
 export DISPLAY=:0
 
+source "/opt/ros/$ROS_DISTRO/setup.bash"
+source "/ros_ws/devel/setup.bash"
 
-#allow headless running to nevertheless generate headcam and forearm cam images
-#nvidia-xconfig --allow-empty-initial-configuration
-#catkin_make repo before sourcing
-source "/opt/ros/$ROS_DISTRO/setup.bash" --extend
-# source "/ros_ws/devel/setup.bash" --extend
+roslaunch fetch_simple_description put_fetchsimple_in_world.launch &
+sleep 5
+roslaunch fetch_simple_description start_HER_world_push.launch &
+rosrun fetch_train execute_trajectories.py &
+sleep 4
 
-# # echo 'alias act="cd /home/dsi/benwex93/learning_agent/pr2_agent/scripts/rosfetch/; sh rosfetch_act"' >> ~/.bashrc
-# # echo 'alias eval="cd /home/dsi/benwex93/learning_agent/pr2_agent/scripts/rosfetch/; sh rosfetch_eval"' >> ~/.bashrc
-# # echo 'alias learn="cd /home/dsi/benwex93/learning_agent/pr2_agent/scripts/rosfetch/; sh rosfetch_learn"' >> ~/.bashrc
-# # echo 'alias clean="cd /home/dsi/benwex93/learning_agent/pr2_agent/scripts/; sh clean_buffer"' >> ~/.bashrc
-
-# #source ~/.bashrc
-# echo $HOST_IP $HOSTNAME >> /etc/hosts
-
-# roslaunch cartpole_v0_training main.launch &
-# sleep 2
 # rosrun gazebo_ros spawn_model -file /root/ros_ws/src/cart_pole/cartpole_description/urdf/camera.sdf -sdf -model camera &
 
 # roslaunch cartpole_openai_ros_examples start_dper_training.launch &

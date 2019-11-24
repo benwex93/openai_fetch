@@ -3,8 +3,8 @@
 import sys
 import copy
 import rospy
-import moveit_commander
-import moveit_msgs.msg
+# import moveit_commander
+# import moveit_msgs.msg
 import geometry_msgs.msg
 import trajectory_msgs.msg
 from std_msgs.msg import Float64

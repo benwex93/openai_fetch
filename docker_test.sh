@@ -1,4 +1,3 @@
-
 docker build -t docker_test .
 xhost +local:root
 
