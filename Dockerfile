@@ -50,11 +50,6 @@ RUN cd /ros_ws/src \
 RUN cd /ros_ws/src \
 	&& git clone https://bitbucket.org/theconstructcore/fetch_simple_simulation.git
 
-RUN pwd 1
-RUN echo 'dummmy'
-RUN pwd 1
-
-
 RUN cd /ros_ws/src \
 	&& git clone https://github.com/benwex93/openai_fetch.git
 
@@ -62,20 +57,10 @@ RUN cd /ros_ws/src \
 RUN /bin/bash -c 'echo "source /opt/ros/$ROS_DISTRO/setup.bash --extend" >> ~/.bashrc;'
 
 RUN /bin/bash -c \
-	'cp -r /ros_ws/src/openai_fetch/robot_envs /ros_ws/src/openai_ros/openai_ros/src/openai_ros/robot_envs/; \
-	cp -r /ros_ws/src/openai_fetch/task_envs /ros_ws/src/openai_ros/openai_ros/src/openai_ros/task_envs/;'
-
-RUN /bin/bash -c \
 	'source /opt/ros/$ROS_DISTRO/setup.bash; \
 	cd /ros_ws; \
 	catkin_make; \
 	source devel/setup.bash;'
-
-
-
-RUN pwd 1
-RUN echo 'dummmsssay'
-RUN pwd 1
 
 COPY ./ros_entrypoint.sh /
 
