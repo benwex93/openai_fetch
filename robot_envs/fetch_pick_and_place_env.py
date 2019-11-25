@@ -75,7 +75,14 @@ class RetchPickAndPlace(robot_gazebo_env.RobotGazeboEnv):
 
     def _check_all_sensors_ready(self):
         self._check_joint_states_ready()
-        
+        while not rospy.is_shutdown():
+            try:
+                self.tf_listener.waitForTransform('/base_link','/r_gripper_finger_link',rospy.Time(), rospy.Duration(4.0))
+                (trans, rot) = self.tf_listener.lookupTransform('/base_link', '/r_gripper_finger_link', rospy.Time(0))
+                break
+            except (tf2.LookupException):
+                print("couldn't get transform")
+                rospy.sleep(1)
         rospy.logdebug("ALL SENSORS READY")
 
     def _check_joint_states_ready(self):
