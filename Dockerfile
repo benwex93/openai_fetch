@@ -50,6 +50,11 @@ RUN cd /ros_ws/src \
 RUN cd /ros_ws/src \
 	&& git clone https://bitbucket.org/theconstructcore/fetch_simple_simulation.git
 
+RUN pwd 1
+RUN echo 'dummmy'
+RUN pwd 1
+
+
 RUN cd /ros_ws/src \
 	&& git clone https://github.com/benwex93/openai_fetch.git
 
@@ -65,6 +70,12 @@ RUN /bin/bash -c \
 	cd /ros_ws; \
 	catkin_make; \
 	source devel/setup.bash;'
+
+
+
+RUN pwd 1
+RUN echo 'dummmsssay'
+RUN pwd 1
 
 COPY ./ros_entrypoint.sh /
 

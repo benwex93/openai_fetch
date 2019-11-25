@@ -5,12 +5,12 @@ export DISPLAY=:0
 source "/opt/ros/$ROS_DISTRO/setup.bash"
 source "/ros_ws/devel/setup.bash"
 
-roslaunch fetch_simple_description put_fetchsimple_in_world.launch &
+roslaunch fetch_simple_description start_HER_world_push.launch headless:="true" gui:="false" &
 sleep 5
-roslaunch fetch_simple_description start_HER_world_push.launch &
+roslaunch fetch_simple_description put_fetchsimple_in_world.launch &
 rosrun fetch_train execute_trajectories.py &
 sleep 4
-
+gz stats
 # rosrun gazebo_ros spawn_model -file /root/ros_ws/src/cart_pole/cartpole_description/urdf/camera.sdf -sdf -model camera &
 
 # roslaunch cartpole_openai_ros_examples start_dper_training.launch &
