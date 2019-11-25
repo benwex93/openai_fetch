@@ -194,9 +194,15 @@ class FetchPickAndPlace(my_fetch_env.MyFetchEnv, utils.EzPickle):
         #     print('dddB2')
         # print('dddC')
 
-        self.tf_listener.waitForTransform('/base_link','/r_gripper_finger_link',rospy.Time(), rospy.Duration(4.0))
-        (trans, rot) = self.tf_listener.lookupTransform('/base_link', '/r_gripper_finger_link', rospy.Time(0))
-
+        while not rospy.is_shutdown():
+            try:
+                self.tf_listener.waitForTransform('/base_link','/r_gripper_finger_link',rospy.Time(), rospy.Duration(4.0))
+                (trans, rot) = self.tf_listener.lookupTransform('/base_link', '/r_gripper_finger_link', rospy.Time(0))
+                break
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                print("couldn't get transform")
+                rospy.sleep(1)
+                continue
         print(trans)
         # ee_pos = self.get_model_state_client('fetch::r_gripper_finger_link', 'ground_plane')
         obs = np.concatenate([
