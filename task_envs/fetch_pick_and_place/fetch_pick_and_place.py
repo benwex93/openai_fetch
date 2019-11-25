@@ -202,7 +202,6 @@ class FetchPickAndPlace(my_fetch_env.MyFetchEnv, utils.EzPickle):
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 print("couldn't get transform")
                 rospy.sleep(1)
-                continue
         print(trans)
         # ee_pos = self.get_model_state_client('fetch::r_gripper_finger_link', 'ground_plane')
         obs = np.concatenate([
