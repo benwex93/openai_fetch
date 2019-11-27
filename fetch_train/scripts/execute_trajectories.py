@@ -106,13 +106,13 @@ class ExecTrajService(object):
         # self.group_variable_values[6] = request.point.positions[6]
         # self.group.set_joint_value_target(self.group_variable_values)
         # self.execute_trajectory()
-        self.bellows_sub.publish(request.point.velocities[0])
-        self.elbow_flex_sub.publish(request.point.velocities[1])
-        self.forearm_roll_sub.publish(request.point.velocities[2])
-        self.l_gripper_sub.publish(request.point.velocities[3])
-        self.r_gripper_sub.publish(request.point.velocities[4])
-        self.upperarm_roll_sub.publish(request.point.velocities[5])
-        self.wrist_roll_sub.publish(request.point.velocities[6])
+        self.bellows_sub.publish(request.point.positions[0])
+        self.elbow_flex_sub.publish(request.point.positions[1])
+        self.forearm_roll_sub.publish(request.point.positions[2])
+        self.l_gripper_sub.publish(request.point.positions[3])
+        self.r_gripper_sub.publish(request.point.positions[4])
+        self.upperarm_roll_sub.publish(request.point.positions[5])
+        self.wrist_roll_sub.publish(request.point.positions[6])
 
 
         

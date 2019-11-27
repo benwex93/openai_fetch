@@ -51,6 +51,7 @@ RUN cd /ros_ws/src \
 	&& git clone https://bitbucket.org/theconstructcore/fetch_simple_simulation.git
 
 RUN pwd 1
+RUN echo 'sdfsdfs'
 
 RUN cd /ros_ws/src \
 	&& git clone https://github.com/benwex93/openai_fetch.git
