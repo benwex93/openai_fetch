@@ -35,87 +35,61 @@ class ExecTrajService(object):
         bellows_topic = '/fetch/bellows_joint_position_controller/command'
         elbow_flex_topic = '/fetch/elbow_flex_joint_position_controller/command'
         forearm_roll_topic = '/fetch/forearm_roll_joint_position_controller/command'
-        l_gripper_topic = '/fetch/l_gripper_finger_joint_position_controller/command'
-        r_gripper_topic = '/fetch/r_gripper_finger_joint_position_controller/command'
+        # l_gripper_topic = '/fetch/l_gripper_finger_joint_position_controller/command'
+        # r_gripper_topic = '/fetch/r_gripper_finger_joint_position_controller/command'
+        shoulder_lift_topic = '/fetch/shoulder_lift_joint_position_controller/command'
+        shoulder_pan_topic = '/fetch/shoulder_pan_joint_position_controller/command'
         upperarm_roll_topic = '/fetch/upperarm_roll_joint_position_controller/command'
+        wrist_flex_topic = '/fetch/wrist_flex_joint_position_controller/command'
         wrist_roll_topic = '/fetch/wrist_roll_joint_position_controller/command'
         
 
-        self.bellows_sub = rospy.Publisher(bellows_topic, Float64, queue_size=10)
-        self.elbow_flex_sub = rospy.Publisher(elbow_flex_topic, Float64, queue_size=10)
-        self.forearm_roll_sub = rospy.Publisher(forearm_roll_topic, Float64, queue_size=10)
-        self.l_gripper_sub = rospy.Publisher(l_gripper_topic, Float64, queue_size=10)
-        self.r_gripper_sub = rospy.Publisher(r_gripper_topic, Float64, queue_size=10)
-        self.upperarm_roll_sub = rospy.Publisher(upperarm_roll_topic, Float64, queue_size=10)
-        self.wrist_roll_sub = rospy.Publisher(wrist_roll_topic, Float64, queue_size=10)
+        self.bellows_pub = rospy.Publisher(bellows_topic, Float64, queue_size=10)
+        self.elbow_flex_pub = rospy.Publisher(elbow_flex_topic, Float64, queue_size=10)
+        self.forearm_roll_pub = rospy.Publisher(forearm_roll_topic, Float64, queue_size=10)
+        # self.l_gripper_sub = rospy.Publisher(l_gripper_topic, Float64, queue_size=10)
+        # self.r_gripper_sub = rospy.Publisher(r_gripper_topic, Float64, queue_size=10)
+        self.shoulder_lift_pub = rospy.Publisher(shoulder_lift_topic, Float64, queue_size=10)
+        self.shoulder_pan_pub = rospy.Publisher(shoulder_pan_topic, Float64, queue_size=10)
+        self.upperarm_roll_pub = rospy.Publisher(upperarm_roll_topic, Float64, queue_size=10)
+        self.wrist_flex_pub = rospy.Publisher(wrist_flex_topic, Float64, queue_size=10)
+        self.wrist_roll_pub = rospy.Publisher(wrist_roll_topic, Float64, queue_size=10)
 
         print('Subscribed')
-        # self.pose_target = geometry_msgs.msg.Pose()
-        
-    # def ee_traj_callback(self, request):
-        
-    #     self.pose_target.orientation.w = request.pose.orientation.w
-    #     self.pose_target.position.x = request.pose.position.x
-    #     self.pose_target.position.y = request.pose.position.y
-    #     self.pose_target.position.z = request.pose.position.z
-    #     self.group.set_pose_target(self.pose_target)
-    #     self.execute_trajectory()
-        
-    #     response = EeTrajResponse()
-    #     response.success = True
-    #     response.message = "Everything went OK"
-        
-    #     return response
-        
-    # def joint_traj_callback(self, request):
-        
-    #     self.group_variable_values = self.group.get_current_joint_values()
-    #     print ("Group Vars:")
-    #     print (self.group_variable_values)
-    #     print ("Point:")
-    #     print (request.point.positions)
-    #     self.group_variable_values[0] = request.point.positions[0]
-    #     self.group_variable_values[1] = request.point.positions[1]
-    #     self.group_variable_values[2] = request.point.positions[2]
-    #     self.group_variable_values[3] = request.point.positions[3]
-    #     self.group_variable_values[4] = request.point.positions[4]
-    #     self.group_variable_values[5] = request.point.positions[5]
-    #     self.group_variable_values[6] = request.point.positions[6]
-    #     self.group.set_joint_value_target(self.group_variable_values)
-    #     self.execute_trajectory()
-        
-    #     response = JointTrajResponse()
-    #     response.success = True
-    #     response.message = "Everything went OK"
-        
-    #     return response
+
+        #self.tuck()
+        rospy.sleep(10)
+
+    def tuck(self):
+
+        joints = ["shoulder_pan_joint", "shoulder_lift_joint", "upperarm_roll_joint",
+                  "elbow_flex_joint", "forearm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"]
+
+        pose = [1.32, 1.40, -0.2, 1.72, 0.0, 1.66, 0.0]
+
+        self.shoulder_pan_pub.publish(pose[0])
+        self.shoulder_lift_pub.publish(pose[1])
+        self.upperarm_roll_pub.publish(pose[2])
+        self.elbow_flex_pub.publish(pose[3])
+        self.forearm_roll_pub.publish(pose[4])
+        self.wrist_flex_pub.publish(pose[5])
+        self.wrist_roll_pub.publish(pose[6])
         
     def joint_traj_callback(self, request):
         
-        # self.group_variable_values = self.group.get_current_joint_values()
-        # print ("Group Vars:")
-        # print (self.group_variable_values)
-        # print ("Point:")
-        # print (request.point.positions)
-        # self.group_variable_values[0] = request.point.positions[0]
-        # self.group_variable_values[1] = request.point.positions[1]
-        # self.group_variable_values[2] = request.point.positions[2]
-        # self.group_variable_values[3] = request.point.positions[3]
-        # self.group_variable_values[4] = request.point.positions[4]
-        # self.group_variable_values[5] = request.point.positions[5]
-        # self.group_variable_values[6] = request.point.positions[6]
-        # self.group.set_joint_value_target(self.group_variable_values)
-        # self.execute_trajectory()
-        self.bellows_sub.publish(request.point.positions[0])
-        self.elbow_flex_sub.publish(request.point.positions[1])
-        self.forearm_roll_sub.publish(request.point.positions[2])
-        self.l_gripper_sub.publish(request.point.positions[3])
-        self.r_gripper_sub.publish(request.point.positions[4])
-        self.upperarm_roll_sub.publish(request.point.positions[5])
-        self.wrist_roll_sub.publish(request.point.positions[6])
+        # # self.l_gripper_sub.publish(request.point.positions[3])
+        # # self.r_gripper_sub.publish(request.point.positions[4])
 
-
+        self.bellows_pub.publish(request.point.positions[0])
+        self.elbow_flex_pub.publish(request.point.positions[0])
+        self.forearm_roll_pub.publish(request.point.positions[1])
+        self.shoulder_lift_pub.publish(request.point.positions[2])
+        self.shoulder_pan_pub.publish(request.point.positions[3])
+        self.upperarm_roll_pub.publish(request.point.positions[4])
+        self.wrist_flex_pub.publish(request.point.positions[5])
+        self.wrist_roll_pub.publish(request.point.positions[6])
         
+        #rospy.sleep(1)
         response = JointTrajResponse()
         response.success = True
         response.message = "Everything went OK"

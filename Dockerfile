@@ -51,13 +51,15 @@ RUN cd /ros_ws/src \
 	&& git clone https://bitbucket.org/theconstructcore/fetch_simple_simulation.git
 
 RUN pwd 1
-RUN echo 'sdfsdfs'
+RUN echo 'sdfsdfss'
 
-RUN cd /ros_ws/src \
-	&& git clone https://github.com/benwex93/openai_fetch.git
+COPY ./fetch_train /ros_ws/src/fetch_train
+COPY ./start_pick_and_place_world.launch /ros_ws/src/fetch_simple_simulation/fetch_simple_description/launch
+COPY ./spawn_objects.launch /ros_ws/src/fetch_simple_simulation/fetch_simple_description/launch
 
 
 RUN /bin/bash -c 'echo "source /opt/ros/$ROS_DISTRO/setup.bash --extend" >> ~/.bashrc;'
+
 
 RUN /bin/bash -c \
 	'source /opt/ros/$ROS_DISTRO/setup.bash; \
