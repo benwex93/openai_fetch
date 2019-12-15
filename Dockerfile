@@ -53,10 +53,17 @@ RUN cd /ros_ws/src \
 RUN pwd 1
 RUN echo 'sdfsdfss'
 
+RUN apt-get update
+RUN apt-get install ros-melodic-fetch-moveit-config -y
+RUN apt-get install ros-melodic-fetch-gazebo -y
+RUN apt-get install ros-melodic-fetch-gazebo-demo -y
+
+
 COPY ./fetch_train /ros_ws/src/fetch_train
 COPY ./start_pick_and_place_world.launch /ros_ws/src/fetch_simple_simulation/fetch_simple_description/launch
 COPY ./spawn_objects.launch /ros_ws/src/fetch_simple_simulation/fetch_simple_description/launch
-
+COPY ./initialization.py /ros_ws/src/fetch_simple_simulation/fetch_simple_description/scripts
+COPY ./demo.launch /opt/ros/melodic/share/fetch_gazebo_demo/launch
 
 RUN /bin/bash -c 'echo "source /opt/ros/$ROS_DISTRO/setup.bash --extend" >> ~/.bashrc;'
 
@@ -66,7 +73,6 @@ RUN /bin/bash -c \
 	cd /ros_ws; \
 	catkin_make; \
 	source devel/setup.bash;'
-
 COPY ./ros_entrypoint.sh /
 
 ENTRYPOINT ["/ros_entrypoint.sh"]

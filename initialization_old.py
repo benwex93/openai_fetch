@@ -58,8 +58,6 @@ class MoveBaseClient(object):
         rospy.loginfo("Waiting for move_base...")
         self.client.wait_for_server()
 
-
-
     def goto(self, x, y, theta, frame="map"):
         move_goal = MoveBaseGoal()
         move_goal.target_pose.pose.position.x = x
@@ -127,35 +125,10 @@ class GraspingClient(object):
         # self.pickplace = PickPlaceInterface("arm", "gripper", verbose=True)
         self.move_group = MoveGroupInterface("arm", "base_link")
 
-
-
-        self.tuck_arm_complete_pub = rospy.Publisher('/tuck_arm_complete_event', String, queue_size=10)
-
-        self.tuck_arm_sub = rospy.Subscriber("/tuck_arm_command", String, self.tuck_arm_callback)
-
         # find_topic = "basic_grasping_perception/find_objects"
         # rospy.loginfo("Waiting for %s..." % find_topic)
         # self.find_client = actionlib.SimpleActionClient(find_topic, FindGraspableObjectsAction)
         # self.find_client.wait_for_server()
-
-    def tuck_arm_callback(self, msg):
-
-        global head_action
-        # global grasping_client
-
-        head_action.look_at(0.85, 0.0, 0.1, "base_link")
-
-        print('Tuck started')
-
-        result = self.tuck()
-
-        print('Tuck complete')
-
-        print(result)
-        # if (result):
-
-        empty = String("")
-        self.tuck_arm_complete_pub.publish(empty)
 
     def updateScene(self):
         # find objects
@@ -267,27 +240,28 @@ class GraspingClient(object):
         joints = ["shoulder_pan_joint", "shoulder_lift_joint", "upperarm_roll_joint",
                   "elbow_flex_joint", "forearm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"]
         pose = [1.32, 1.40, -0.2, 1.72, 0.0, 1.66, 0.0]
-
-        startTime = rospy.get_time()
-
         while not rospy.is_shutdown():
-
-            if rospy.get_time() - startTime > 30:
-                return False
-
             result = self.move_group.moveToJointPosition(joints, pose, 0.02)
             if result.error_code.val == MoveItErrorCodes.SUCCESS:
-                return True
+                return
+
+def reset_episode_callback(msg):
+    
+    global head_action
+    global grasping_client
+
+    head_action.look_at(0.85, 0.0, 0.1, "base_link")
+
+    grasping_client.tuck()
 
 if __name__ == "__main__":
     # Create a node
-    rospy.init_node("initialization")
+    rospy.init_node("demo")
 
     # Make sure sim time is working
     while not rospy.Time.now():
         pass
 
-        
     # Setup clients
     # move_base = MoveBaseClient()
     # torso_action = FollowTrajectoryClient("torso_controller", ["torso_lift_joint"])
@@ -306,8 +280,6 @@ if __name__ == "__main__":
 
     # Point the head at the cube we want to pick
     
-    print 'head moving start'
-
     head_action.look_at(0.85, 0.0, 0.1, "base_link")
 
     print 'head moving done'
@@ -330,7 +302,7 @@ if __name__ == "__main__":
     grasping_client.tuck()
 
 
-
+    rospy.Subscriber("/reset_episode", String, reset_episode_callback)
 
     # # Lower torso
     # rospy.loginfo("Lowering torso...")

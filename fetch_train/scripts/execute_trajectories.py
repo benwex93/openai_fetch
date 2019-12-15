@@ -15,21 +15,14 @@ class ExecTrajService(object):
     
     def __init__(self):
 
-        # moveit_commander.roscpp_initialize(sys.argv)
-        
-        # self.robot = moveit_commander.RobotCommander()
-        # self.scene = moveit_commander.PlanningSceneInterface()    
-        # self.group = moveit_commander.MoveGroupCommander("arm")
-        # display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.msg.DisplayTrajectory)
 
-        # self.ee_traj_srv = rospy.Service('/ee_traj_srv', EeTraj , self.ee_traj_callback)
-        # self.joint_traj_srv = rospy.Service('/joint_traj_srv', JointTraj , self.joint_traj_callback)
-        # self.ee_pose_srv = rospy.Service('/ee_pose_srv', EePose , self.ee_pose_callback)
-        # self.ee_rpy_srv = rospy.Service('/ee_rpy_srv', EeRpy , self.ee_rpy_callback)
+        head_tilt_topic ='/fetch/head_tilt_joint_position_controller/command'
+        self.head_tilt_pub = rospy.Publisher(head_tilt_topic, Float64, queue_size=10)
+        self.head_move_srv = rospy.Service('/head_move_srv', JointTraj, self.head_move_callback)      
+
+
 
         self.joint_traj_srv = rospy.Service('/joint_traj_srv', JointTraj, self.joint_traj_callback)      
-
-
 
 
         bellows_topic = '/fetch/bellows_joint_position_controller/command'
@@ -60,34 +53,40 @@ class ExecTrajService(object):
         #self.tuck()
         rospy.sleep(10)
 
-    def tuck(self):
+    # def tuck_arm_callback(self, request):
 
-        joints = ["shoulder_pan_joint", "shoulder_lift_joint", "upperarm_roll_joint",
-                  "elbow_flex_joint", "forearm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"]
+    #     joints = ["shoulder_pan_joint", "shoulder_lift_joint", "upperarm_roll_joint",
+    #               "elbow_flex_joint", "forearm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"]
 
-        pose = [1.32, 1.40, -0.2, 1.72, 0.0, 1.66, 0.0]
+    #     pose = [1.32, 1.40, -0.2, 1.72, 0.0, 1.66, 0.0]
 
-        self.shoulder_pan_pub.publish(pose[0])
-        self.shoulder_lift_pub.publish(pose[1])
-        self.upperarm_roll_pub.publish(pose[2])
-        self.elbow_flex_pub.publish(pose[3])
-        self.forearm_roll_pub.publish(pose[4])
-        self.wrist_flex_pub.publish(pose[5])
-        self.wrist_roll_pub.publish(pose[6])
+    #     self.shoulder_pan_pub.publish(pose[0])
+    #     self.shoulder_lift_pub.publish(pose[1])
+    #     self.upperarm_roll_pub.publish(pose[2])
+    #     self.elbow_flex_pub.publish(pose[3])
+    #     self.forearm_roll_pub.publish(pose[4])
+    #     self.wrist_flex_pub.publish(pose[5])
+    #     self.wrist_roll_pub.publish(pose[6])
         
+    #     rospy.sleep(5)
+    #     response = JointTrajResponse()
+    #     response.success = True
+    #     response.message = "Everything went OK"
+        
+    #     return response
     def joint_traj_callback(self, request):
         
         # # self.l_gripper_sub.publish(request.point.positions[3])
         # # self.r_gripper_sub.publish(request.point.positions[4])
 
         self.bellows_pub.publish(request.point.positions[0])
-        self.elbow_flex_pub.publish(request.point.positions[0])
-        self.forearm_roll_pub.publish(request.point.positions[1])
-        self.shoulder_lift_pub.publish(request.point.positions[2])
-        self.shoulder_pan_pub.publish(request.point.positions[3])
-        self.upperarm_roll_pub.publish(request.point.positions[4])
-        self.wrist_flex_pub.publish(request.point.positions[5])
-        self.wrist_roll_pub.publish(request.point.positions[6])
+        self.elbow_flex_pub.publish(request.point.positions[1])
+        self.forearm_roll_pub.publish(request.point.positions[2])
+        self.shoulder_lift_pub.publish(request.point.positions[3])
+        self.shoulder_pan_pub.publish(request.point.positions[4])
+        self.upperarm_roll_pub.publish(request.point.positions[5])
+        self.wrist_flex_pub.publish(request.point.positions[6])
+        self.wrist_roll_pub.publish(request.point.positions[7])
         
         #rospy.sleep(1)
         response = JointTrajResponse()
@@ -95,7 +94,15 @@ class ExecTrajService(object):
         response.message = "Everything went OK"
         
         return response
-
+    def head_move_callback(self, request):
+        self.head_tilt_pub.publish(request.point.positions[0])
+        
+        #rospy.sleep(1)
+        response = JointTrajResponse()
+        response.success = True
+        response.message = "Everything went OK"
+        
+        return response
     def execute_trajectory(self):
         
         self.plan = self.group.plan()
