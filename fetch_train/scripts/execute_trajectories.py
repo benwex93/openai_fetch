@@ -18,9 +18,9 @@ class ExecTrajService(object):
 
         head_tilt_topic ='/fetch/head_tilt_joint_position_controller/command'
         self.head_tilt_pub = rospy.Publisher(head_tilt_topic, Float64, queue_size=10)
+
+
         self.head_move_srv = rospy.Service('/head_move_srv', JointTraj, self.head_move_callback)      
-
-
 
         self.joint_traj_srv = rospy.Service('/joint_traj_srv', JointTraj, self.joint_traj_callback)      
 
