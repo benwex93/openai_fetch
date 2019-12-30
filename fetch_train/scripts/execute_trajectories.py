@@ -5,7 +5,8 @@ import copy
 import rospy
 # import moveit_commander
 # import moveit_msgs.msg
-####
+# ####
+# from moveit_python import MoveGroupInterface
 import geometry_msgs.msg
 import trajectory_msgs.msg
 from std_msgs.msg import Float64
@@ -15,6 +16,8 @@ class ExecTrajService(object):
     
     def __init__(self):
 
+        # moveit_commander.roscpp_initialize(sys.argv)
+        # self.move_group = MoveGroupInterface("arm", "base_link")
 
         head_tilt_topic ='/fetch/head_tilt_joint_position_controller/command'
         self.head_tilt_pub = rospy.Publisher(head_tilt_topic, Float64, queue_size=10)
@@ -76,8 +79,23 @@ class ExecTrajService(object):
     #     return response
     def joint_traj_callback(self, request):
         
-        # # self.l_gripper_sub.publish(request.point.positions[3])
-        # # self.r_gripper_sub.publish(request.point.positions[4])
+
+        # joints = ["elbow_flex_joint", "forearm_roll_joint", "shoulder_lift_joint",
+        #           "shoulder_pan_joint", "upperarm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"]
+        # print(request.point.positions)
+        # pose = [
+        #         request.point.positions[1], \
+        #         request.point.positions[2], \
+        #         request.point.positions[3], \
+        #         request.point.positions[4], \
+        #         request.point.positions[5], \
+        #         request.point.positions[6],  \
+        #         request.point.positions[7]  \
+        #         ]
+        # #while not rospy.is_shutdown():
+        # result = self.move_group.moveToJointPosition(joints, pose, 0.02)
+
+
 
         self.bellows_pub.publish(request.point.positions[0])
         self.elbow_flex_pub.publish(request.point.positions[1])

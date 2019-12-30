@@ -10,7 +10,6 @@ nvidia-docker run \
     --env="QT_X11_NO_MITSHM=1" \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --privileged \
-    -it \
     -e XAUTHORITY -e NVIDIA_DRIVER_CAPABILITIES=all \
     -e GAZEBO_GUI=true \
     -e GAZEBO_HEADLESS=false \

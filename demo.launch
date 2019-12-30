@@ -6,6 +6,8 @@
   <!-- Start MoveIt -->
   <include file="$(find fetch_moveit_config)/launch/move_group.launch" >
     <arg name="info" value="true"/><!-- publish grasp markers -->
+    <remap from="robot_description" to="fetch_robot_description" />
+    <remap from="/joint_states" to="/fetch/joint_states" />
   </include>
 
   
