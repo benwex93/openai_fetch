@@ -28,7 +28,7 @@ class ExecTrajService(object):
         self.joint_traj_srv = rospy.Service('/joint_traj_srv', JointTraj, self.joint_traj_callback)      
 
 
-        bellows_topic = '/fetch/bellows_joint_position_controller/command'
+        #bellows_topic = '/fetch/bellows_joint_position_controller/command'
         elbow_flex_topic = '/fetch/elbow_flex_joint_position_controller/command'
         forearm_roll_topic = '/fetch/forearm_roll_joint_position_controller/command'
         # l_gripper_topic = '/fetch/l_gripper_finger_joint_position_controller/command'
@@ -40,7 +40,7 @@ class ExecTrajService(object):
         wrist_roll_topic = '/fetch/wrist_roll_joint_position_controller/command'
         
 
-        self.bellows_pub = rospy.Publisher(bellows_topic, Float64, queue_size=10)
+        #self.bellows_pub = rospy.Publisher(bellows_topic, Float64, queue_size=10)
         self.elbow_flex_pub = rospy.Publisher(elbow_flex_topic, Float64, queue_size=10)
         self.forearm_roll_pub = rospy.Publisher(forearm_roll_topic, Float64, queue_size=10)
         # self.l_gripper_sub = rospy.Publisher(l_gripper_topic, Float64, queue_size=10)
@@ -97,14 +97,14 @@ class ExecTrajService(object):
 
 
 
-        self.bellows_pub.publish(request.point.positions[0])
-        self.elbow_flex_pub.publish(request.point.positions[1])
-        self.forearm_roll_pub.publish(request.point.positions[2])
-        self.shoulder_lift_pub.publish(request.point.positions[3])
-        self.shoulder_pan_pub.publish(request.point.positions[4])
-        self.upperarm_roll_pub.publish(request.point.positions[5])
-        self.wrist_flex_pub.publish(request.point.positions[6])
-        self.wrist_roll_pub.publish(request.point.positions[7])
+        #self.bellows_pub.publish(request.point.positions[0])
+        self.elbow_flex_pub.publish(request.point.positions[0])
+        self.forearm_roll_pub.publish(request.point.positions[1])
+        self.shoulder_lift_pub.publish(request.point.positions[2])
+        self.shoulder_pan_pub.publish(request.point.positions[3])
+        self.upperarm_roll_pub.publish(request.point.positions[4])
+        self.wrist_flex_pub.publish(request.point.positions[5])
+        self.wrist_roll_pub.publish(request.point.positions[6])
         
         #rospy.sleep(1)
         response = JointTrajResponse()

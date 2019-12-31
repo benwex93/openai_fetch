@@ -64,7 +64,7 @@ COPY ./start_pick_and_place_world.launch /ros_ws/src/fetch_simple_simulation/fet
 COPY ./spawn_objects.launch /ros_ws/src/fetch_simple_simulation/fetch_simple_description/launch
 COPY ./initialization.py /ros_ws/src/fetch_simple_simulation/fetch_simple_description/scripts
 COPY ./demo.launch /opt/ros/melodic/share/fetch_gazebo_demo/launch
-COPY ./fetch.yaml /ros_ws/src/fetch_simple_simulation/fetch_simple_description/config
+#COPY ./fetch.yaml /ros_ws/src/fetch_simple_simulation/fetch_simple_description/config
 
 RUN /bin/bash -c 'echo "source /opt/ros/$ROS_DISTRO/setup.bash --extend" >> ~/.bashrc;'
 
