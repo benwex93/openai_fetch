@@ -31,30 +31,30 @@ class ExecTrajService(object):
         #bellows_topic = '/fetch/bellows_joint_position_controller/command'
         elbow_flex_topic = '/fetch/elbow_flex_joint_position_controller/command'
         forearm_roll_topic = '/fetch/forearm_roll_joint_position_controller/command'
-        # l_gripper_topic = '/fetch/l_gripper_finger_joint_position_controller/command'
-        # r_gripper_topic = '/fetch/r_gripper_finger_joint_position_controller/command'
+        l_gripper_topic = '/fetch/l_gripper_finger_joint_position_controller/command'
+        r_gripper_topic = '/fetch/r_gripper_finger_joint_position_controller/command'
         shoulder_lift_topic = '/fetch/shoulder_lift_joint_position_controller/command'
         shoulder_pan_topic = '/fetch/shoulder_pan_joint_position_controller/command'
         upperarm_roll_topic = '/fetch/upperarm_roll_joint_position_controller/command'
         wrist_flex_topic = '/fetch/wrist_flex_joint_position_controller/command'
         wrist_roll_topic = '/fetch/wrist_roll_joint_position_controller/command'
         
-
+        #MAKE QUEUE SIZE 1 SO THAT ACTIONS DON"T PILE UP AND ARE EXECUTED IMMEDIATELY FROM OBS
         #self.bellows_pub = rospy.Publisher(bellows_topic, Float64, queue_size=10)
-        self.elbow_flex_pub = rospy.Publisher(elbow_flex_topic, Float64, queue_size=10)
-        self.forearm_roll_pub = rospy.Publisher(forearm_roll_topic, Float64, queue_size=10)
-        # self.l_gripper_sub = rospy.Publisher(l_gripper_topic, Float64, queue_size=10)
-        # self.r_gripper_sub = rospy.Publisher(r_gripper_topic, Float64, queue_size=10)
-        self.shoulder_lift_pub = rospy.Publisher(shoulder_lift_topic, Float64, queue_size=10)
-        self.shoulder_pan_pub = rospy.Publisher(shoulder_pan_topic, Float64, queue_size=10)
-        self.upperarm_roll_pub = rospy.Publisher(upperarm_roll_topic, Float64, queue_size=10)
-        self.wrist_flex_pub = rospy.Publisher(wrist_flex_topic, Float64, queue_size=10)
-        self.wrist_roll_pub = rospy.Publisher(wrist_roll_topic, Float64, queue_size=10)
+        self.elbow_flex_pub = rospy.Publisher(elbow_flex_topic, Float64, queue_size=1)
+        self.forearm_roll_pub = rospy.Publisher(forearm_roll_topic, Float64, queue_size=1)
+        self.l_gripper_pub = rospy.Publisher(l_gripper_topic, Float64, queue_size=1)
+        self.r_gripper_pub = rospy.Publisher(r_gripper_topic, Float64, queue_size=1)
+        self.shoulder_lift_pub = rospy.Publisher(shoulder_lift_topic, Float64, queue_size=1)
+        self.shoulder_pan_pub = rospy.Publisher(shoulder_pan_topic, Float64, queue_size=1)
+        self.upperarm_roll_pub = rospy.Publisher(upperarm_roll_topic, Float64, queue_size=1)
+        self.wrist_flex_pub = rospy.Publisher(wrist_flex_topic, Float64, queue_size=1)
+        self.wrist_roll_pub = rospy.Publisher(wrist_roll_topic, Float64, queue_size=1)
 
         print('Subscribed')
 
         #self.tuck()
-        rospy.sleep(10)
+        #rospy.sleep(10)
 
     # def tuck_arm_callback(self, request):
 
@@ -100,11 +100,13 @@ class ExecTrajService(object):
         #self.bellows_pub.publish(request.point.positions[0])
         self.elbow_flex_pub.publish(request.point.positions[0])
         self.forearm_roll_pub.publish(request.point.positions[1])
-        self.shoulder_lift_pub.publish(request.point.positions[2])
-        self.shoulder_pan_pub.publish(request.point.positions[3])
-        self.upperarm_roll_pub.publish(request.point.positions[4])
-        self.wrist_flex_pub.publish(request.point.positions[5])
-        self.wrist_roll_pub.publish(request.point.positions[6])
+        self.l_gripper_pub.publish(request.point.positions[2])
+        self.r_gripper_pub.publish(request.point.positions[3])
+        self.shoulder_lift_pub.publish(request.point.positions[4])
+        self.shoulder_pan_pub.publish(request.point.positions[5])
+        self.upperarm_roll_pub.publish(request.point.positions[6])
+        self.wrist_flex_pub.publish(request.point.positions[7])
+        self.wrist_roll_pub.publish(request.point.positions[8])
         
         #rospy.sleep(1)
         response = JointTrajResponse()
