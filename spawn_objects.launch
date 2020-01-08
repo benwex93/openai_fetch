@@ -1,7 +1,8 @@
 <launch>
 
   <!-- Spawn a robot into Gazebo -->
-  <node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-file $(find fetch_simple_description)/models/table_big.urdf -urdf -x 1.33091  -z -0.25 -model table_big" />
+  <node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-file $(find fetch_simple_description)/models/cafe_table/model-1_4.sdf -sdf -x 1.0  -z -0.08 -model table" />
   <node name="spawn_cube" pkg="gazebo_ros"  type="spawn_model" args="-file $(find fetch_simple_description)/models/cube.sdf -sdf -x 1 -model cube -x 0.8 -y 0 -z 5.0" />
 
 </launch>
+

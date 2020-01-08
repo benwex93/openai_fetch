@@ -63,7 +63,9 @@ COPY ./fetch_train /ros_ws/src/fetch_train
 COPY ./start_pick_and_place_world.launch /ros_ws/src/fetch_simple_simulation/fetch_simple_description/launch
 COPY ./spawn_objects.launch /ros_ws/src/fetch_simple_simulation/fetch_simple_description/launch
 COPY ./initialization.py /ros_ws/src/fetch_simple_simulation/fetch_simple_description/scripts
-COPY ./demo.launch /opt/ros/melodic/share/fetch_gazebo_demo/launch
+COPY ./cafe_table /ros_ws/src/fetch_simple_simulation/fetch_simple_description/models/cafe_table
+#COPY ./demo.launch /opt/ros/melodic/share/fetch_gazebo_demo/launch
+#COPY ./simple_pick_place.sdf /opt/ros/melodic/share/fetch_gazebo/worlds
 #COPY ./fetch.yaml /ros_ws/src/fetch_simple_simulation/fetch_simple_description/config
 
 RUN /bin/bash -c 'echo "source /opt/ros/$ROS_DISTRO/setup.bash --extend" >> ~/.bashrc;'

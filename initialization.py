@@ -308,7 +308,8 @@ if __name__ == "__main__":
     
     print 'head moving start'
 
-    head_action.look_at(0.85, 0.0, 0.1, "base_link")
+    #head_action.look_at(0.85, 0.0, 0.1, "base_link")
+    head_action.look_at(2, 0.0, 0.0, "base_link")
 
     print 'head moving done'
 
