@@ -16,15 +16,13 @@ roslaunch fetch_gazebo simulation.launch &
 sleep 8
 roslaunch fetch_simple_description spawn_objects.launch &
 sleep 8
+roslaunch fetch_gazebo_demo demo.launch --log &
+sleep 8
 rosrun fetch_train execute_trajectories.py &
 echo 'launched execute_trajectories'
-# roslaunch fetch_gazebo_demo demo.launch &
 
-# chmod +x /ros_ws/src/fetch_simple_simulation/fetch_simple_description/scripts/initialization.py
 
-# sleep 5
-# rosrun fetch_simple_description initialization.py &
-sleep 5
+# roslaunch fetch_gazebo_demo demo.launch --log
 
 #gz stats
 

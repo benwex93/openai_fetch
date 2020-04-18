@@ -64,6 +64,8 @@ find_package(catkin REQUIRED COMPONENTS
    EeRpy.srv
    EeTraj.srv
    JointTraj.srv
+   JointFK.srv
+   RandPose.srv
  )
 
 ## Generate actions in the 'action' folder

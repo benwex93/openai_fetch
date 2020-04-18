@@ -1,0 +1,5 @@
+trajectory_msgs/JointTrajectoryPoint point
+---
+geometry_msgs/PoseStamped[] pose_stamped
+string[] fk_link_names
+int32 error_code

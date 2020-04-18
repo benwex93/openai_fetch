@@ -1,38 +1,29 @@
-#! /usr/bin/env python
-
+#!/usr/bin/python
+import sys
+import copy
+import rospy
+import moveit_commander
+import moveit_msgs.msg
+import geometry_msgs.msg
+from fetch_train.srv import JointTraj, JointTrajResponse
+from moveit_python import MoveGroupInterface
 import actionlib
 from control_msgs.msg import (FollowJointTrajectoryAction,
                               FollowJointTrajectoryGoal,
                               GripperCommandAction,
                               GripperCommandGoal)
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from moveit_msgs.msg import PlaceLocation, MoveItErrorCodes
 
-
-
-import sys
-import copy
-import rospy
-# import moveit_commander
-# import moveit_msgs.msg
-# ####
-# from moveit_python import MoveGroupInterface
-import geometry_msgs.msg
-import trajectory_msgs.msg
-from std_msgs.msg import Float64
-from fetch_train.srv import JointTraj, JointFK, RandPose
-
-from std_msgs.msg import String, Header
-import moveit_commander
-from moveit_msgs.srv import GetPositionFK
-from moveit_msgs.msg import RobotState
-
-
-from moveit_python import MoveGroupInterface
 
 class ExecTrajService(object):
     
     def __init__(self):
 
+        self.move_group = MoveGroupInterface("arm", "base_link")
+
+        # pose_target = group.get_current_pose().pose
+        # print("Current Pose=="+str(pose_target))
 
         rospy.loginfo("Waiting for head_controller...")
         self.head_client = actionlib.SimpleActionClient("head_controller/follow_joint_trajectory", FollowJointTrajectoryAction)
@@ -66,11 +57,9 @@ class ExecTrajService(object):
 
         self.head_move_srv = rospy.Service('/head_move_srv', JointTraj, self.head_move_callback)      
 
+        self.head_move_srv = rospy.Service('/arm_move_srv', JointTraj, self.arm_move_xyz)      
         self.joint_traj_srv = rospy.Service('/joint_traj_srv', JointTraj, self.joint_traj_callback)      
 
-        self.fk_srv = rospy.Service('/fk_srv', JointFK, self.fk_callback)      
-
-        self.rand_xyz = rospy.Service('/rand_xyz_srv', RandPose, self.rand_xyz_callback)     
 
         # #bellows_topic = '/fetch/bellows_joint_position_controller/command'
         # elbow_flex_topic = '/fetch/elbow_flex_joint_position_controller/command'
@@ -95,51 +84,7 @@ class ExecTrajService(object):
         # self.wrist_flex_pub = rospy.Publisher(wrist_flex_topic, Float64, queue_size=1)
         # self.wrist_roll_pub = rospy.Publisher(wrist_roll_topic, Float64, queue_size=1)
 
-        self.arm_group = moveit_commander.MoveGroupCommander('arm')
-        # self.move_group = MoveGroupInterface("arm", "base_link")
         print('Subscribed')
-    def fk_callback(self, request):
-
-
-        try:
-            moveit_fk = rospy.ServiceProxy('compute_fk', GetPositionFK)
-        except rospy.ServiceException, e:
-            rospy.logerror("Service call failed: %s"%e)
-        fkln = ['gripper_link']
-        joint_names = ["elbow_flex_joint", "forearm_roll_joint", "shoulder_lift_joint", \
-                        "shoulder_pan_joint", "upperarm_roll_joint",\
-                        "wrist_flex_joint", "wrist_roll_joint"]
-        #joint_positions = arm_group.get_random_joint_values()
-        # joint_positions = [0, 0, 0, 0, 0, 0, 0]
-        joint_positions = [request.point.positions[0], request.point.positions[1], \
-                    request.point.positions[4], request.point.positions[5], \
-                    request.point.positions[6], request.point.positions[7], \
-                    request.point.positions[8]]
-
-        header = Header(0,rospy.Time.now(),'')
-        rs = RobotState()
-        rs.joint_state.name = joint_names
-        rs.joint_state.position = joint_positions
-
-        # gripper_pose = moveit_fk(header, fkln, rs) # Lookup the pose
-        # print(gripper_pose)
-
-        # response = JointTrajResponse()
-        # response.success = True
-        # response.message = str(gripper_pose)
-        try:
-            result = moveit_fk(header, fkln, rs)
-        except rospy.ServiceException, e:
-            rospy.logerror("Service call failed: %s"%e)
-        #error_code = int(result.error_code)
-        return [result.pose_stamped, result.fk_link_names, 0]
-
-    def rand_xyz_callback(self, request):
-        try:
-            response = self.arm_group.get_random_pose()
-        except rospy.ServiceException, e:
-            rospy.logerror("Service call failed: %s"%e)
-        return response
 
     def joint_traj_callback(self, request):
 
@@ -159,10 +104,6 @@ class ExecTrajService(object):
         # trajectory.points[1].accelerations = [0.0] * len(arm_joint_positions)
         # trajectory.points[1].time_from_start = rospy.Duration(4.0)
 
-
-
-
-        ###########################
         arm_joint_positions  = [request.point.positions[0], request.point.positions[1], \
                     request.point.positions[4], request.point.positions[5], \
                     request.point.positions[6], request.point.positions[7], \
@@ -186,20 +127,14 @@ class ExecTrajService(object):
         # gripper_goal.command.position = 0.1
 
         #rospy.loginfo("Setting positions...")
-        self.arm_client.send_goal(arm_goal)
-        self.arm_client.wait_for_result(rospy.Duration(10.0))
-        # gripper_client.send_goal(gripper_goal)
-        # gripper_client.wait_for_result(rospy.Duration(10.0))
+        # self.arm_client.send_goal(arm_goal)
+        # self.arm_client.wait_for_result(rospy.Duration(1.0))
+        result = self.move_group.moveToJointPosition(self.arm_joint_names, arm_joint_positions, 0.02)
+        # if result.error_code.val == MoveItErrorCodes.SUCCESS:
+        #     pass
+                # gripper_client.send_goal(gripper_goal)
+        # gripper_client.wait_for_result(rospy.Duration(5.0))
         #rospy.loginfo("...done")
-
-
-        ##########################
-
-
-
-
-
-
 
         # #self.bellows_pub.publish(request.point.positions[0])
         # self.elbow_flex_pub.publish(request.point.positions[0])
@@ -213,42 +148,42 @@ class ExecTrajService(object):
         # self.wrist_roll_pub.publish(request.point.positions[8])
         
         #rospy.sleep(1)
-        # response = JointTrajResponse()
-        # response.success = True
-        # response.message = "Everything went OK"
-
-        # arm_joint_positions  = [request.point.positions[0], request.point.positions[1], \
-        #     request.point.positions[4], request.point.positions[5], \
-        #     request.point.positions[6], request.point.positions[7], \
-        #     request.point.positions[8]]
-
-        # joint_names = ["elbow_flex_joint", "forearm_roll_joint", "shoulder_lift_joint", \
-        #                 "shoulder_pan_joint", "upperarm_roll_joint",\
-        #                 "wrist_flex_joint", "wrist_roll_joint"]
-
-        # result = self.move_group.moveToJointPosition(joint_names, arm_joint_positions, 0.02)
-        # # if result.error_code.val != MoveItErrorCodes.SUCCESS:
-        #     # return [False, "Everythings gone to hell"]
-
-
-
-
-
-
-
-
+        response = JointTrajResponse()
+        response.success = True
+        response.message = "Everything went OK"
         
-        return [True, "Everything went OK"]
+        return response
+    def arm_move_xyz(self, request):
+        pose_target = geometry_msgs.msg.Pose()
+
+        pose_target.orientation.x = 0
+        pose_target.orientation.y = 0
+        pose_target.orientation.z = 0
+        pose_target.orientation.w = 0.99
+        pose_target.position.x = request.point.positions[0]
+        pose_target.position.y = request.point.positions[1]
+        pose_target.position.z = request.point.positions[2]
+
+        self.group.set_pose_target(pose_target)
+        print("Executing..START>"+str(pose_target.position))
+        plan1 = self.group.plan()
+        self.group.go(wait=True)
+        print("Executing..DONE>"+str(pose_target.position))
+
+        response = JointTrajResponse()
+        response.success = True
+        response.message = "Everything went OK"
+        
+        return response
     def head_move_callback(self, request):
         #self.head_tilt_pub.publish(request.point.positions[0])
         
         #rospy.sleep(1)
-        # response = JointTrajResponse()
-        # response.success = True
-        # response.message = "Everything went OK"
+        response = JointTrajResponse()
+        response.success = True
+        response.message = "Everything went OK"
         
-        # return response
-        return [True, "Everything went OK"]
+        return response
 
 
         # trajectory = JointTrajectory()

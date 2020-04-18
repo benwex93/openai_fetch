@@ -1,28 +1,19 @@
 <launch>
 
   <!-- Start navigation -->
-  <!-- <include file="$(find fetch_gazebo_demo)/launch/fetch_nav.launch" /> -->
+<!--   <include file="$(find fetch_gazebo_demo)/launch/fetch_nav.launch" /> -->
 
   <!-- Start MoveIt -->
   <include file="$(find fetch_moveit_config)/launch/move_group.launch" >
     <arg name="info" value="true"/><!-- publish grasp markers -->
-    <remap from="robot_description" to="fetch_robot_description" />
-    <remap from="/joint_states" to="/fetch/joint_states" />
   </include>
 
-  
-  <!-- Run Rviz and load the default config to see the state of the move_group node -->
-<!--   <include file="$(find fetch_moveit_config)/launch/moveit_rviz.launch">
-    <arg name="config" value="true"/>
-    <arg name="debug" value="$(arg debug)"/>
-  </include>
- -->
   <!-- Start Perception -->
 <!--   <node name="basic_grasping_perception" pkg="simple_grasping" type="basic_grasping_perception" >
     <rosparam command="load" file="$(find fetch_gazebo_demo)/config/simple_grasping.yaml" />
-  </node>
- -->
+  </node> -->
+
   <!-- Drive to the table, pick stuff up -->
-  <!-- <node name="demo" pkg="fetch_gazebo_demo" type="demo.py" output="screen" /> -->
+<!--   <node name="demo" pkg="fetch_gazebo_demo" type="demo.py" output="screen" /> -->
 
 </launch>

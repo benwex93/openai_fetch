@@ -50,8 +50,6 @@ RUN cd /ros_ws/src \
 RUN cd /ros_ws/src \
 	&& git clone https://bitbucket.org/theconstructcore/fetch_simple_simulation.git
 
-RUN pwd 1
-RUN echo 'sdfsdfss'
 
 RUN apt-get update
 RUN apt-get install ros-melodic-fetch-moveit-config -y
@@ -68,7 +66,7 @@ COPY ./fetch.gazebo.xacro /opt/ros/melodic/share/fetch_gazebo/robots
 #COPY ./cafe_table /ros_ws/src/fetch_simple_simulation/fetch_simple_description/models/cafe_table
 #COPY ./demo_cube /ros_ws/src/fetch_simple_simulation/fetch_simple_description/models/demo_cube
 COPY ./cube.sdf /ros_ws/src/fetch_simple_simulation/fetch_simple_description/models/
-#COPY ./demo.launch /opt/ros/melodic/share/fetch_gazebo_demo/launch
+# COPY ./demo.launch /opt/ros/melodic/share/fetch_gazebo_demo/launch
 #COPY ./simple_pick_place.sdf /opt/ros/melodic/share/fetch_gazebo/worlds
 #COPY ./fetch.yaml /ros_ws/src/fetch_simple_simulation/fetch_simple_description/config
 
